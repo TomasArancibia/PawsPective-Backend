@@ -19,15 +19,10 @@ class User(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-
             "email": self.email,
-
             "username": self.username,
-
             "name": self.name,
-
             "lastname": self.lastname,
-
             "age": self.age
         }
 
@@ -43,13 +38,9 @@ class Location(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-
             "name": self.name,
-
             "address": self.address,
-
             "city": self.city,
-
             "country": self.country
         }
 
@@ -62,7 +53,6 @@ class Feed(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-
             "type": self.type
         }
 
@@ -80,15 +70,10 @@ class Post(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-
             "user_id": self.user_id,
-
             "like_count": self.likecount,
-
             "location": self.location,
-
             "date": self.date,
-
             "source_url": self.source_url
         }
     
@@ -101,7 +86,6 @@ class Like(db.Model):
     def serialize(self):
         return {
             "user_id": self.user_id,
-
             "post_id": self.post_id
         }
 
@@ -113,12 +97,11 @@ class Follower(db.Model):
     def serialize(self):
         return {
             "user_from_id": self.user_from_id,
-
             "user_to_id": self.user_to_id
         }
     
 
-class Comment(db.Mosdel):
+class Comment(db.Model):
     __tablename__ = "comment"
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(400), nullable=True)
@@ -128,10 +111,7 @@ class Comment(db.Mosdel):
     def serialize(self):
         return {
             "id": self.id,
-
             "text": self.text,
-
             "author_id": self.author_id,
-
             "post_id": self.post_id
         }
