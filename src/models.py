@@ -73,7 +73,7 @@ class Location(db.Model):
 class Post(db.Model):
     __tablename__ = "post"
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(400), unique=True, nullable=False)
+    description = db.Column(db.String(400), nullable=False)
     likecount = db.Column(db.Integer)
     source_url = db.Column(db.String, nullable=False)
     date = db.Column(db.Date, nullable=False)
