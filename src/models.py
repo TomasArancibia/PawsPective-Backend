@@ -26,8 +26,10 @@ class User(db.Model):
             "age": self.age
         }
 
+
 class Follower(db.Model):
     __tablename__ = "follower"
+    id = db.Column(db.Integer, primary_key=True)
     user_from_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user_to_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -36,6 +38,37 @@ class Follower(db.Model):
             "user_from_id": self.user_from_id,
             "user_to_id": self.user_to_id
         }
+
+
+class Feed(db.Model):
+    __tablename__ = "feed"
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "type": self.type
+        }
+
+
+class Location(db.Model):
+    __tablename__ = "location"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    address = db.Column(db.String, nullable=False)
+    city = db.Column(db.String, nullable=False)
+    country = db.Column(db.String, nullable=False)
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "address": self.address,
+            "city": self.city,
+            "country": self.country
+        }
+
 
 class Post(db.Model):
     __tablename__ = "post"
@@ -58,12 +91,13 @@ class Post(db.Model):
             "source_url": self.source_url
         }
 
+
 class Comment(db.Model):
     __tablename__ = "comment"
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(400), nullable=True)
     author_id  = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    post_id  = db.Column(db.String, db.ForeignKey("post.id"), nullable=False)
+    post_id  = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
 
     def serialize(self):
         return {
@@ -73,10 +107,11 @@ class Comment(db.Model):
             "post_id": self.post_id
         }
 
+
 class Media(db.Model):
     __tablename__ = "media"
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Coluimn(db.String, nullable=False)
+    type = db.Column(db.String, nullable=False)
     url = db.Column(db.String, nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
 
@@ -87,9 +122,12 @@ class Media(db.Model):
             "url": self.url,
             "post_id": self.post_id
         }
+
+
 class Like(db.Model):
     __tablename__ = "like"
-    post_id = db.Column(db.String, db.ForeignKey("post.id"), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     def serialize(self):
@@ -98,30 +136,3 @@ class Like(db.Model):
             "post_id": self.post_id
         }
 
-class Feed(db.Model):
-    __tablename__ = "feed"
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String, nullable=False)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "type": self.type
-        }
-
-class Location(db.Model):
-    __tablename__ = "location"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    address = db.Column(db.String, nullable=False)
-    city = db.Column(db.String, nullable=False)
-    country = db.Column(db.String, nullable=False)
-    
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "address": self.address,
-            "city": self.city,
-            "country": self.country
-        }
