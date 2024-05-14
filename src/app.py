@@ -8,47 +8,60 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Location, Media, Like, Comment, Follower, Feed 
 #from models import Person
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ModelesDB.db"
 db.init_app(app)
 migrate = Migrate(app, db)
-# app.url_map.strict_slashes = False
 
-# db_url = os.getenv("DATABASE_URL")
-# if db_url is not None:
-#     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace("postgres://", "postgresql://")
-# else:
-#     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+@app.route('/', methods=['GET'])
+def sitemap():
+    return generate_sitemap(app)
 
-# MIGRATE = Migrate(app, db)
-# db.init_app(app)
-# CORS(app)
-# setup_admin(app)
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    users_list = [user.serialize() for user in users]
+    return jsonify(users_list), 200
 
-# # Handle/serialize errors like a JSON object
-# @app.errorhandler(APIException)
-# def handle_invalid_usage(error):
-#     return jsonify(error.to_dict()), error.status_code
+@app.route('/users/register', methods=['POST'])
+def register_user():
+    data = request.get_json()
+    new_user = User()
+    new_user.username = data['username']
+    new_user.email = data['email']
+    new_user.password = data['password']
+    new_user.name = data['name']
+    new_user.lastname = data['lastname']
+    new_user.age = data['age']
 
-# # generate sitemap with all your endpoints
-# @app.route('/')
-# def sitemap():
-#     return generate_sitemap(app)
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'User created sucessfully'}), 201
 
-# @app.route('/user', methods=['GET'])
-# def handle_hello():
+@app.route('/users/<int:user_id>', methods=['PUT', 'DELETE']) # type: ignore
+def update_or_delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
+    
+    if request.method == 'PUT':
+        user_data = request.json
+        user.username = user_data.get('username', user.username) # type: ignore
+        user.email = user_data.get('email', user.email) # type: ignore
+        user.password = user_data.get('password', user.password) # type: ignore
+        user.name = user_data.get('name', user.name) # type: ignore
+        user.lastname = user_data.get('lastname', user.lastname) # type: ignore
+        user.age = user_data.get('age', user.age) # type: ignore
+        db.session.commit()
+        return jsonify({'message': 'User updated successfully'}), 200
+    elif request.method == 'DELETE':
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deleted successfully'}), 200
 
-#     response_body = {
-#         "msg": "Hello, this is your GET /user response "
-#     }
-
-#     return jsonify(response_body), 200
-
-# this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=True)
