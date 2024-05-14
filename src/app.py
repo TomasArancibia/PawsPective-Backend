@@ -16,14 +16,30 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ModelesDB.db"
 db.init_app(app)
 migrate = Migrate(app, db)
 
+@app.route('/', methods=['GET'])
+def sitemap():
+    return generate_sitemap(app)
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    users_list = [user.serialize() for user in users]
+    return jsonify(users_list), 200
+
 @app.route('/users/register', methods=['POST'])
 def register_user():
-    data = request.json
-    new_user = User(username=data['username'], email=data['email'], password=data['password'], name=data['name'], lastname=data['lastname'], age=data['age']) # type: ignore
+    data = request.get_json()
+    new_user = User()
+    new_user.username = data['username']
+    new_user.email = data['email']
+    new_user.password = data['password']
+    new_user.name = data['name']
+    new_user.lastname = data['lastname']
+    new_user.age = data['age']
+
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'User created sucessfully'}), 201
-
 
 @app.route('/users/<int:user_id>', methods=['PUT', 'DELETE']) # type: ignore
 def update_or_delete_user(user_id):
@@ -45,7 +61,6 @@ def update_or_delete_user(user_id):
         db.session.delete(user)
         db.session.commit()
         return jsonify({'message': 'User deleted successfully'}), 200
-
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
