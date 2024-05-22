@@ -14,6 +14,7 @@ from models import db, User, Location, Media, Like, Comment, Follower, Feed
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ModelesDB.db"
 db.init_app(app)
+CORS(app)
 migrate = Migrate(app, db)
 
 @app.route('/', methods=['GET'])
