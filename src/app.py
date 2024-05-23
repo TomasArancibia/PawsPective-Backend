@@ -105,7 +105,13 @@ def new_post():
 
     db.session.add(new_post)
     db.session.commit()
-    return jsonify({'message': 'Post created successfully', 'image_url': new_post.source_url}), 201
+    return jsonify({'message': 'Post created successfully'}), 201
+
+@app.route('/feed', methods=['GET'])
+def get_posts():
+    posts = Post.query.all()
+    post_list = [post.serialize() for post in posts]
+    return jsonify(post_list), 200
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
