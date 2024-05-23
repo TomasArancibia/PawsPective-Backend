@@ -22,7 +22,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-expires_jwt = timedelta(days=1)
+expires_jwt = timedelta(days=5)
 
 @app.route('/', methods=['GET'])
 def sitemap():
