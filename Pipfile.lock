@@ -65,6 +65,14 @@
             "markers": "python_version >= '3.8'",
             "version": "==1.8.2"
         },
+        "certifi": {
+            "hashes": [
+                "sha256:0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f",
+                "sha256:dc383c07b76109f368f6106eee2b593b04a011ea4d55f652c6ca24a754d1cdd1"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==2024.2.2"
+        },
         "click": {
             "hashes": [
                 "sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28",
@@ -72,6 +80,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==8.1.7"
+        },
+        "cloudinary": {
+            "hashes": [
+                "sha256:fe1a5309734814b481de637ab3041e8699995387df965ec0f2d8f767db7067a2"
+            ],
+            "index": "pypi",
+            "version": "==1.40.0"
         },
         "colorama": {
             "hashes": [
@@ -523,6 +538,14 @@
             "markers": "python_version >= '3.6'",
             "version": "==6.0.1"
         },
+        "six": {
+            "hashes": [
+                "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
+                "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
+            ],
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==1.16.0"
+        },
         "sqlalchemy": {
             "hashes": [
                 "sha256:0094c5dc698a5f78d3d1539853e8ecec02516b62b8223c970c86d44e7a80f6c7",
@@ -586,6 +609,14 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==4.11.0"
+        },
+        "urllib3": {
+            "hashes": [
+                "sha256:450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d",
+                "sha256:d0570876c61ab9e520d776c38acbbb5b05a776d3f9ff98a5c8fd5162a444cf19"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==2.2.1"
         },
         "werkzeug": {
             "hashes": [
