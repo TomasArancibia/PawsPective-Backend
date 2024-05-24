@@ -21,6 +21,8 @@ import cloudinary.uploader
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ModelesDB.db"
 app.config['UPLOAD_FOLDER'] = "instance/photos"
+app.config["SECRET_KEY"] = "PALABRA_SECRETA"
+app.config["JWT_SECRET_KEY"] = "PALABRA_SECRETA_JWT"
 db.init_app(app)
 CORS(app)
 migrate = Migrate(app, db)
