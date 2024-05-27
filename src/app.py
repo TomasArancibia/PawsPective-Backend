@@ -48,6 +48,28 @@ def get_users():
     users_list = [user.serialize() for user in users]
     return jsonify(users_list), 200
 
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user_by_id(user_id):
+    # Query User by ID
+    user = User.query.get_or_404(user_id)
+
+    # Return User Data
+    return jsonify({
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'name': user.name,
+        'lasname': user.lastname,
+        'age': user.age
+        }), 200
+
+@app.route('/users/<username>', methods=['GET'])
+def get_user_by_username(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
+    return jsonify(user.serialize()), 200
+    
 @app.route('/users/register', methods=['POST'])
 def register_user():
     data = request.get_json()
