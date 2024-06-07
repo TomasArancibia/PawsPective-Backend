@@ -16,6 +16,7 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from flask_bcrypt import Bcrypt
 import cloudinary
 import cloudinary.uploader
+import requests
 #from models import Person
 
 app = Flask(__name__)
@@ -136,33 +137,52 @@ def login_user():
 @app.route('/feed/new_post', methods=['POST'])
 def new_post():
     if 'post_data' not in request.form or 'source_url' not in request.files:
-        return jsonify({'error': 'Invalid request'}), 400
+        return jsonify({'error': 'Invalid request, missing post_data or source_url'}), 400
+
     data = request.form['post_data']
     file = request.files['source_url']
+
     try:
         data = json.loads(data)
     except ValueError:
         return jsonify({'error': 'Invalid JSON'}), 400
-    
-  
+
     new_post = Post()
-    new_post.description = data["description"]
+    new_post.description = data.get("description", "")
     new_post.user_id = 1
     new_post.likecount = 0
     new_post.location = 0
     new_post.feed_id = 1
     new_post.date = datetime.datetime.now()
 
-    
+    if "location" in data:
+        location = data["location"]
+        lat = location.get("lat")
+        lon = location.get("lng")
+        if lat is not None and lon is not None:
+            try:
+                response = requests.get(f'https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}')
+                if response.status_code == 200:
+                    location_data = response.json()
+                    new_post.location = location_data.get("display_name", "Unknown location")
+                else:
+                    print(f"Error fetching location data: {response.status_code}")
+            except requests.RequestException as e:
+                print(f"RequestException while fetching location data: {e}")
+
     try:
         upload_result = cloudinary.uploader.upload(file)
         new_post.source_url = upload_result['secure_url']
     except Exception as e:
         return jsonify({'error': 'Error uploading to Cloudinary', 'details': str(e)}), 500
 
-    db.session.add(new_post)
-    db.session.commit()
-    return jsonify({'message': 'Post created successfully'}), 201
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({'message': 'Post created successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Error saving to database', 'details': str(e)}), 500
 
 @app.route('/feed', methods=['GET'])
 def get_posts():
