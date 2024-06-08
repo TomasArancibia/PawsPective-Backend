@@ -16,7 +16,7 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from flask_bcrypt import Bcrypt
 import cloudinary
 import cloudinary.uploader
-import requests
+import requests # type: ignore
 #from models import Person
 
 app = Flask(__name__)

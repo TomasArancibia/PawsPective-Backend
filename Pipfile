@@ -21,6 +21,7 @@ flask-admin = "*"
 cloudinary = "*"
 flask-jwt-extended = "*"
 flask-bcrypt = "*"
+requests = "*"
 
 [requires]
 python_version = "3.12.3"
